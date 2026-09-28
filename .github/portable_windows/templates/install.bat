@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0" || exit /b 1
 
 echo ============================================
 echo  ComfyUI-nunchaku First-Time Setup
@@ -116,10 +117,10 @@ echo [5/5] Installing nunchaku...
 set NUNCHAKU_WHEEL=https://github.com/nunchaku-ai/nunchaku/releases/download/v%NUNCHAKU_VERSION%/nunchaku-%NUNCHAKU_VERSION%+torch2.9-cp311-cp311-win_amd64.whl
 
 python_embeded\python.exe -m pip install "%NUNCHAKU_WHEEL%"
-if %errorlevel% neq 0 (
-    echo WARNING: Failed to install nunchaku from wheel
-    echo You may need to install it manually or check if the version is available.
-    echo Continuing anyway...
+if errorlevel 1 (
+    echo ERROR: Failed to install nunchaku from wheel
+    echo Check that the requested version is available and run install.bat again.
+    goto :error
 )
 
 REM ============================================
@@ -159,3 +160,4 @@ echo.
 exit /b 1
 
 :end
+exit /b 0
